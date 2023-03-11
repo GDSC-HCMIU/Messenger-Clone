@@ -1,35 +1,30 @@
+// Variables
 const express = require('express');
-var app = express();
-var bodyParser = require('body-parser');
-const AccountModel = require('./models/account');
+const router = require('./routers/route');
+const connectToDB = require('./database/connection');
+const PORT=5454
+require('dotenv').config();
+const server = express();
 
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
+// Middleware
+server.use(express.json());
 
+// Router
+server.use('/messenger-clone/api/user', router);
 
-app.post('/register', (req, res, next) => {
-     var username = req.body.username;
-     var password = req.body.password;
-     
-     console.log(username, password);
-     
-     AccountModel.create({
-          username: username,
-          password: password
-     })
-     .then(data => {
-          res.json('New account is created.')
-     })
-     .catch(err => {
-          res.status(500).json('Failed to create the account!')
-     })
+// Server start
+const start = async (req, res) => {
+     try {
+          // Database connection
+          await connectToDB(process.env.MONGODB_URL);
+          // Server start listening
+          server.listen(
+               PORT,
+               console.log(`SERVER STARTS LISTENING ON PORT ${PORT}...`)
+          )
+     } catch(error) {
+          console.log(error);
+     }
+};
 
-})
-
-app.get('/', (req, res, next) => {
-     res.json('Hello');
-})
-
-app.listen(3000, () => {
-     console.log('Server started listening on port 3000.');
-})
+start();
