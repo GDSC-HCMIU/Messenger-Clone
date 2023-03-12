@@ -7,6 +7,7 @@ const {
      userSignIn,
      firstView
 } = require('../controller/task')
+const task = require('../controller/task');
 
 // Route
 /**
@@ -21,6 +22,6 @@ router.route('/signin').post(userSignIn);
 router.get('/signin/me', auth, async (req, res) => {
      res.send(req.user);
 });
-
+router.get('/edit', auth, task.editProfile);
 // Exports module
 module.exports = router;

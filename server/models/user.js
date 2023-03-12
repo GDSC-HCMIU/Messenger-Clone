@@ -3,9 +3,16 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bycrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { v4: uuidv4 } = require('uuid');
+
 
 // User schema
 const user_schema = mongoose.Schema({
+     _id: {
+          type: String,
+          required: true,
+          default: () => uuidv4(),
+      },
      name: {
           type: String,
           required: true,
